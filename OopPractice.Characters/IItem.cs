@@ -20,12 +20,12 @@ namespace OopPractice.Characters
         /// Applies the item's effects when equipped.
         /// </summary>
         /// <param name="target">The character equipping the item.</param>
-        void Equip(Character target);
+        void Equip(Character target, ILogger logger);
 
         /// <summary>
         /// Removes the item's effects when unequipped.
         /// </summary>
         /// <param name="target">The character unequipping the item.</param>
-        void Unequip(Character target);
+        void Unequip(Character target, ILogger logger);
     }
 }

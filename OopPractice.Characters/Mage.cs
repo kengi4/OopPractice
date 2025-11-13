@@ -8,9 +8,9 @@ public class Mage : Character
     /// <summary>
     /// Initializes a new instance of the <see cref="Mage"/> class.
     /// </summary>
-    public Mage(string name)
-        : base(name, 80, 3, 5)
-    {
+    public Mage(string name, ILogger logger)
+        : base(name, 80, 3, 5, logger)
+    {                                 
         _abilities.Add(new Fireball());
     }
 

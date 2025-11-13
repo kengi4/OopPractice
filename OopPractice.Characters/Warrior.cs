@@ -15,9 +15,9 @@ namespace OopPractice.Characters
         /// Initializes a new instance of the <see cref="Warrior"/> class.
         /// </summary>
         /// <param name="name">The warrior's name.</param>
-        public Warrior(string name)
-            : base(name, 150, 10, 15)
-        {
+        public Warrior(string name, ILogger logger)
+            : base(name, 150, 10, 15, logger)
+        {                                    
             _abilities.Add(new PowerStrike());
         }
 

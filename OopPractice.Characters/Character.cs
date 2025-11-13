@@ -5,10 +5,12 @@
 /// </summary>
 public class Character
 {
-    public string Name { get; protected set; }
-    public int Health { get; protected set; }
-    public int Armor { get; protected set; }
-    public int AttackPower { get; protected set; }
+    public string Name { get; private set; }
+    public int Health { get; private set; }
+    public int Armor { get; private set; }
+    public int AttackPower { get; private set; }
+
+    private readonly ILogger _logger;
 
     protected List<IAbility> _abilities = new List<IAbility>();
     protected List<IItem> _equippedItems = new List<IItem>();
@@ -16,12 +18,13 @@ public class Character
     /// <summary>
     /// Initializes a new instance of the <see cref="Character"/> class.
     /// </summary>
-    public Character(string name, int health, int armor, int attackPower)
+    public Character(string name, int health, int armor, int attackPower, ILogger logger)
     {
         Name = name;
         Health = health;
         Armor = armor;
         AttackPower = attackPower;
+        _logger = logger;
     }
 
     /// <summary>
@@ -30,7 +33,7 @@ public class Character
     /// <param name="target">The character to attack.</param>
     public virtual void Attack(Character target)
     {
-        Console.WriteLine($"{Name} attacks {target.Name}!");
+        _logger.Log($"{Name} attacks {target.Name}!");
 
         target.TakeDamage(this.AttackPower);
     }
@@ -43,10 +46,10 @@ public class Character
     {
         int damageTaken = Math.Max(0, amount - Armor);
         Health -= damageTaken;
-        Console.WriteLine($"{Name} takes {damageTaken} damage. Current health: {Health}");
+        _logger.Log($"{Name} takes {damageTaken} damage. Current health: {Health}");
         if (Health <= 0)
         {
-            Console.WriteLine($"{Name} has been defeated!");
+            _logger.Log($"{Name} has been defeated!");
         }
     }
 
@@ -58,19 +61,19 @@ public class Character
     {
         if (amount <= 0)
         {
-            Console.WriteLine("Heal amount must be positive.");
+            _logger.Log("Heal amount must be positive.");
             return;
         }
         else if (Health + amount > 100)
         {
             int curHealth = Health;
             Health = 100;
-            Console.WriteLine($"{Name} heals for {Health - curHealth}. Current health: {Health}");
+            _logger.Log($"{Name} heals for {Health - curHealth}. Current health: {Health}");
         }
         else
         {
             Health += amount;
-            Console.WriteLine($"{Name} heals for {amount}. Current health: {Health}");
+            _logger.Log($"{Name} heals for {amount}. Current health: {Health}");
         }
     }
 
@@ -80,9 +83,9 @@ public class Character
     /// <param name="item">The item to equip.</param>
     public void EquipItem(IItem item)
     {
-        Console.WriteLine($"{Name} equips {item.Name}.");
+        _logger.Log($"{Name} equips {item.Name}.");
         _equippedItems.Add(item);
-        item.Equip(this);
+        item.Equip(this, _logger);
     }
 
     /// <summary>
@@ -96,12 +99,12 @@ public class Character
 
         if (ability != null)
         {
-            Console.WriteLine($"{Name} uses {ability.Name} on {target.Name}!");
-            ability.Use(this, target);
+            _logger.Log($"{Name} uses {ability.Name} on {target.Name}!");
+            ability.Use(this, target, _logger);
         }
         else
         {
-            Console.WriteLine($"{Name} doesn't know the ability '{abilityName}'.");
+            _logger.Log($"{Name} doesn't know the ability '{abilityName}'.");
         }
     }
 

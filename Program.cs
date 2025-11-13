@@ -1,5 +1,6 @@
-﻿using OopPractice.Text;
-using OopPractice.Characters;
+﻿using OopPractice.Characters;
+using OopPractice.Text;
+using OopPractice1;
 
 // Text
 Console.WriteLine("--- Text System ---");
@@ -21,31 +22,14 @@ Console.WriteLine("=== Rendering Full Text ===");
 Console.WriteLine(myArticle.RenderFullText());
 
 // Game
-Console.WriteLine("\n\n--- Game System ---");
-Console.WriteLine();
+ILogger logger = new ConsoleLogger();
 
-Character warrior = new Warrior("Aragorn");
-Character mage = new Mage("Gandalf");
-Console.WriteLine($"Created: {warrior.Name} (HP: {warrior.Health}, AP: {warrior.AttackPower}, Armor: {warrior.Armor})");
-Console.WriteLine($"Created: {mage.Name} (HP: {mage.Health}, AP: {mage.AttackPower}, Armor: {mage.Armor})");
-Console.WriteLine();
+Character hero = new Warrior("Aragorn", logger);
+Character mage = new Mage("Gandalf", logger);
 
-IItem sword = new Sword();
+Game battle = new Game(hero, mage, logger);
 
-warrior.EquipItem(sword);
-Console.WriteLine($"Current stats for {warrior.Name}: (AP: {warrior.AttackPower})");
-Console.WriteLine();
+battle.SimulateBattle();
 
-mage.UseAbility("Fireball", warrior);
-Console.WriteLine();
-
-warrior.UseAbility("Power Strike", mage);
-Console.WriteLine();
-
-warrior.Attack(mage);
-Console.WriteLine();
-
-mage.Attack(warrior);
-Console.WriteLine();
 Console.WriteLine("\nPress any key to exit...");
 Console.ReadKey();

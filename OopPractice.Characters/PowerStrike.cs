@@ -22,11 +22,10 @@ namespace OopPractice.Characters
         }
 
         /// <inheritdoc/>
-        public void Use(Character caster, Character target)
+        public void Use(Character caster, Character target, ILogger logger)
         {
             int damage = (int)(caster.AttackPower * 1.25);
-            Console.WriteLine($"{caster.Name} performs a Power Strike on {target.Name}!");
-
+            logger.Log($"{caster.Name} performs a Power Strike on {target.Name}!");
             target.TakeDamage(damage);
         }
     }

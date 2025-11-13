@@ -1,5 +1,4 @@
-﻿using OopPractice1;
-using System.Text;
+﻿using System.Text;
 
 /// <summary>
 /// Represents a composite text document, acting as a container for <see cref="TextElement"/> objects.

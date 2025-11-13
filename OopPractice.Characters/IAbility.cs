@@ -21,6 +21,6 @@ namespace OopPractice.Characters
         /// </summary>
         /// <param name="caster">The character using the ability.</param>
         /// <param name="target">The target of the ability.</param>
-        void Use(Character caster, Character target);
+        void Use(Character caster, Character target, ILogger logger);
     }
 }

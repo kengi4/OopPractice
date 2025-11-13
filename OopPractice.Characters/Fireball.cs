@@ -22,11 +22,10 @@ namespace OopPractice.Characters
         }
 
         /// <inheritdoc/>
-        public void Use(Character caster, Character target)
+        public void Use(Character caster, Character target, ILogger logger)
         {
             int damage = 30;
-            Console.WriteLine($"{caster.Name} hurls a fireball at {target.Name}!");
-
+            logger.Log($"{caster.Name} hurls a fireball at {target.Name}!");
             target.TakeDamage(damage);
         }
     }
