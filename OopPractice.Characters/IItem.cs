@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OopPractice1
+namespace OopPractice.Characters
 {
     /// <summary>
     /// Defines the contract for an item that a character can equip.

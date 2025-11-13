@@ -1,4 +1,5 @@
-﻿using OopPractice1;
+﻿using OopPractice.Text;
+using OopPractice.Characters;
 
 // Text
 Console.WriteLine("--- Text System ---");

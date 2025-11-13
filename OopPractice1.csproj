@@ -16,4 +16,9 @@
     <None Remove="OopPractice.Text\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="OopPractice.Characters\OopPractice.Characters.csproj" />
+    <ProjectReference Include="OopPractice.Text\OopPractice.Text.csproj" />
+  </ItemGroup>
+
 </Project>

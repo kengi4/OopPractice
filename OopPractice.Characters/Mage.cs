@@ -1,4 +1,4 @@
-﻿using OopPractice1;
+﻿using OopPractice.Characters;
 
 /// <summary>
 /// Represents a Mage, a specialized type of <see cref="Character"/>.

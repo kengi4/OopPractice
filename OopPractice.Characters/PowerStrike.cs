@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OopPractice1
+namespace OopPractice.Characters
 {
     /// <summary>
     /// Represents a PowerStrike ability.
