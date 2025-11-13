@@ -7,4 +7,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="OopPractice.Characters\**" />
+    <Compile Remove="OopPractice.Text\**" />
+    <EmbeddedResource Remove="OopPractice.Characters\**" />
+    <EmbeddedResource Remove="OopPractice.Text\**" />
+    <None Remove="OopPractice.Characters\**" />
+    <None Remove="OopPractice.Text\**" />
+  </ItemGroup>
+
 </Project>
