@@ -6,20 +6,22 @@ using OopPractice1;
 Console.WriteLine("--- Text System ---");
 Console.WriteLine();
 
-Text myArticle = new Text();
+TextFactory doc = new TextFactory("Test Document");
 
-myArticle.Add(new Header("The Principles of OOP", 1));
-myArticle.Add(new Paragraph("Object-Oriented Programming (OOP) is a programming paradigm..."));
-myArticle.Add(new Header("Inheritance", 2));
-myArticle.Add(new Paragraph("Inheritance allows a class to inherit properties..."));
-myArticle.Add(new Header("Polymorphism", 2));
-myArticle.Add(new Paragraph("Polymorphism allows..."));
+doc.AddParagraph("Some thoughts...");
+doc.AddHeading("Top:");
+doc.AddParagraph("This is a line.");
+doc.AddParagraph("This is another line.");
+doc.AddHeading("Inner:");
+doc.AddParagraph("This is an inner line.");
+doc.Up();
+doc.AddHeading("Inner 2:");
+doc.AddParagraph("Another inner line.");
+doc.Up();
+doc.Up();
+doc.AddParagraph("Some closure...");
 
-Console.WriteLine("=== Rendering Table of Contents ===");
-Console.WriteLine(myArticle.RenderTableOfContents());
-
-Console.WriteLine("=== Rendering Full Text ===");
-Console.WriteLine(myArticle.RenderFullText());
+Console.WriteLine(doc.ToString());
 
 // Game
 ILogger logger = new ConsoleLogger();

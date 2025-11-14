@@ -1,34 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace OopPractice.Text
 {
     /// <summary>
-    /// Represents a simple paragraph of text.
+    /// Represents a paragraph (a leaf node).
     /// </summary>
-    public class Paragraph : TextElement
+    public class Paragraph : Leaf
     {
-        /// <summary>
-        /// Stores the content of the paragraph.
-        /// </summary>
-        private readonly string _text;
+        public Paragraph(string? content) : base(content) { }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Paragraph"/> class.
-        /// </summary>
-        /// <param name="text">The content of the paragraph.</param>
-        public Paragraph(string text)
+        public override void Render(StringBuilder builder, int indentation)
         {
-            _text = text;
-        }
-
-        /// <inheritdoc/> 
-        public override string Render()
-        {
-            return _text;
+            string indent = new string('\t', indentation);
+            builder.AppendLine($"{indent}{_content ?? string.Empty}");
         }
     }
 }

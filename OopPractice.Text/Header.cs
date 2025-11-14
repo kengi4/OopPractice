@@ -1,62 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace OopPractice.Text
 {
     /// <summary>
-    /// Represents a header element.
+    /// Represents a header (a container node).
     /// </summary>
-    public class Header : TextElement
+    public class Header : Container
     {
-        private readonly string _title;
-        private readonly int _level;
+        public Header(string name, Container? parent) : base(name, parent) { }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Header"/> class.
-        /// </summary>
-        /// <param name="title">The title text of the header.</param>
-        /// <param name="level">The level of the header (e.g., 1 for H1, 2 for H2).</param>
-        public Header(string title, int level)
+        public override void Render(StringBuilder builder, int indentation)
         {
-            _title = title;
-            _level = level;
-        }
+            string indent = new string('\t', indentation);
+            builder.AppendLine($"{indent}{_name}");
 
-        /// <inheritdoc/>
-        public override string Render()
-        {
-            if (_level == 1)
-            {
-                return $"== {_title.ToUpper()} ==";
-            }
-            else if (_level == 2)
-            {
-                return $"--- {_title} ---";
-            }
-            else
-            {
-                return $"# {_title}";
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string? GetContentHeader()
-        {
-            if (_level == 1)
-            {
-                return $"- {_title}";
-            }
-            else if (_level == 2)
-            {
-                return $" - {_title}";
-            }
-            else
-            {
-                return $"   - {_title}";
-            }
+            base.Render(builder, indentation);
         }
     }
 }
