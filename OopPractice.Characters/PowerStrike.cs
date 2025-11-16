@@ -12,6 +12,7 @@ namespace OopPractice.Characters
     public class PowerStrike : IAbility
     {
         /// <inheritdoc/>
+        public Guid Id { get; } = Guid.NewGuid();
         public string Name { get; } = "Power Strike";
 
         /// <summary>

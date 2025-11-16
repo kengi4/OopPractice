@@ -9,12 +9,13 @@ namespace OopPractice.Text
     {
         public Header(string name, Container? parent) : base(name, parent) { }
 
-        public override void Render(StringBuilder builder, int indentation)
+        public override void Render(StringBuilder builder, int indentation, bool showIds)
         {
             string indent = new string('\t', indentation);
-            builder.AppendLine($"{indent}{_name}");
+            string idPrefix = showIds ? $"[{Id.ToString().Substring(0, 8)}] " : "";
+            builder.AppendLine($"{indent}{idPrefix}{Name}");
 
-            base.Render(builder, indentation);
+            base.Render(builder, indentation, showIds);
         }
     }
 }

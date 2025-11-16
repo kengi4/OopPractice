@@ -13,6 +13,7 @@ namespace OopPractice.Text
         /// </summary>
         /// <param name="builder">The StringBuilder to append to.</param>
         /// <param name="indentation">The current indentation level.</param>
-        void Render(StringBuilder builder, int indentation);
+        Guid Id { get; }
+        void Render(StringBuilder builder, int indentation, bool showIds);
     }
 }

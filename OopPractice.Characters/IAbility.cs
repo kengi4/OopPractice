@@ -15,6 +15,7 @@ namespace OopPractice.Characters
         /// Gets the name of the ability.
         /// </summary>
         string Name { get; } // (1) Властивість "тільки для читання"
+        Guid Id { get; }
 
         /// <summary>
         /// Executes the ability.

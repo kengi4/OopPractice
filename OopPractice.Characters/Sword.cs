@@ -15,6 +15,7 @@ namespace OopPractice.Characters
 
 
         /// <inheritdoc/>
+        public Guid Id { get; } = Guid.NewGuid();
         public string Name { get; } = "Iron Sword";
 
         /// <summary>

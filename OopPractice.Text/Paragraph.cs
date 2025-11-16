@@ -9,10 +9,11 @@ namespace OopPractice.Text
     {
         public Paragraph(string? content) : base(content) { }
 
-        public override void Render(StringBuilder builder, int indentation)
+        public override void Render(StringBuilder builder, int indentation, bool showIds)
         {
             string indent = new string('\t', indentation);
-            builder.AppendLine($"{indent}{_content ?? string.Empty}");
+            string idPrefix = showIds ? $"[{Id.ToString().Substring(0, 8)}] " : "";
+            builder.AppendLine($"{indent}{idPrefix}{_content ?? string.Empty}");
         }
     }
 }

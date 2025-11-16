@@ -8,14 +8,15 @@ namespace OopPractice.Text
     /// </summary>
     public abstract class Container : IText
     {
-        protected readonly string _name;
+        public Guid Id { get; } = Guid.NewGuid();
+        public string Name { get; }
         protected readonly List<IText> _children = new List<IText>();
 
         public Container? Parent { get; private set; }
 
         protected Container(string name, Container? parent = null)
         {
-            _name = name;
+            Name = name;
             Parent = parent;
         }
 
@@ -29,12 +30,49 @@ namespace OopPractice.Text
             }
         }
 
-        public virtual void Render(StringBuilder builder, int indentation)
+        /// <summary>
+        /// Removes a child element from this container.
+        /// </summary>
+        /// <param name="child">The child element to remove.</param>
+        /// <returns>True if removal was successful, false otherwise.</returns>
+        public bool RemoveChild(IText child)
+        {
+            return _children.Remove(child);
+        }
+
+        public virtual void Render(StringBuilder builder, int indentation, bool showIds)
         {
             foreach (var child in _children)
             {
-                child.Render(builder, indentation + 1);
+                child.Render(builder, indentation + 1, showIds);
             }
+        }
+        public override string ToString()
+        {
+            return $"[Container] {Name} ({_children.Count} children)";
+        }
+
+
+        /// <summary>
+        /// Finds a child element by its name (if it's a Container) or content (if it's a Leaf).
+        /// This is a simplified search.
+        /// </summary>
+        public IText? FindChild(string nameOrContent)
+        {
+            return _children.FirstOrDefault(child =>
+            {
+                if (child is Container c)
+                {
+                    return c.Name.Equals(nameOrContent, StringComparison.OrdinalIgnoreCase);
+                }
+                if (child is Leaf l)
+                {
+                    var sb = new System.Text.StringBuilder();
+                    l.Render(sb, 0, false);
+                    return sb.ToString().Trim().Equals(nameOrContent, StringComparison.OrdinalIgnoreCase);
+                }
+                return false;
+            });
         }
     }
 }

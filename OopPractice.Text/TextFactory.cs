@@ -8,8 +8,15 @@ namespace OopPractice.Text
     /// </summary>
     public class TextFactory
     {
-        private readonly Root _root;
-        private Container _current;
+        /// <summary>
+        /// Gets the root node of the document.
+        /// </summary>
+        public Root RootNode { get; }
+
+        /// <summary>
+        /// Gets the current container node the factory is adding to.
+        /// </summary>
+        public Container CurrentNode { get; private set; }
 
         /// <summary>
         /// Initializes a new factory for a document.
@@ -17,8 +24,8 @@ namespace OopPractice.Text
         /// <param name="title">The main title of the document.</param>
         public TextFactory(string title)
         {
-            _root = new Root(title);
-            _current = _root;
+            RootNode = new Root(title);
+            CurrentNode = RootNode;
         }
 
         /// <summary>
@@ -27,9 +34,9 @@ namespace OopPractice.Text
         /// <param name="name">The text of the header.</param>
         public void AddHeading(string name)
         {
-            var heading = new Header(name, _current);
-            _current.AddChild(heading);
-            _current = heading;
+            var heading = new Header(name, CurrentNode); 
+            CurrentNode.AddChild(heading); 
+            CurrentNode = heading; 
         }
 
         /// <summary>
@@ -38,7 +45,7 @@ namespace OopPractice.Text
         /// <param name="content">The text of the paragraph.</param>
         public void AddParagraph(string? content)
         {
-            _current.AddChild(new Paragraph(content));
+            CurrentNode.AddChild(new Paragraph(content)); 
         }
 
         /// <summary>
@@ -46,11 +53,10 @@ namespace OopPractice.Text
         /// </summary>
         public void Up()
         {
-            if (_current.Parent != null)
+            if (CurrentNode.Parent != null)
             {
-                _current = _current.Parent;
+                CurrentNode = CurrentNode.Parent;
             }
-            // If Parent is null, we are already at the root, do nothing.
         }
 
         /// <summary>
@@ -58,8 +64,20 @@ namespace OopPractice.Text
         /// </summary>
         public override string ToString()
         {
-            // The Root class has a helper method for this
-            return _root.RenderToString();
+            return RootNode.RenderToString(false);
+        }
+
+        public string RenderWithIds()
+        {
+            return RootNode.RenderToString(true);
+        }
+
+        /// <summary>
+        /// Manually sets the current working node.
+        /// </summary>
+        public void SetCurrentNode(Container container)
+        {
+            CurrentNode = container;
         }
     }
 }

@@ -8,6 +8,7 @@ namespace OopPractice.Text
     /// </summary>
     public abstract class Leaf : IText
     {
+        public Guid Id { get; } = Guid.NewGuid();
         protected readonly string? _content;
 
         protected Leaf(string? content)
@@ -15,6 +16,11 @@ namespace OopPractice.Text
             _content = content;
         }
 
-        public abstract void Render(StringBuilder builder, int indentation);
+        public abstract void Render(StringBuilder builder, int indentation, bool showIds);
+
+        public override string ToString()
+        {
+            return $"[Leaf] {_content}";
+        }
     }
 }

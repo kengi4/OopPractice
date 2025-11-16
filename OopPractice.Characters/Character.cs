@@ -5,10 +5,13 @@
 /// </summary>
 public class Character
 {
+    public Guid Id { get; } = Guid.NewGuid();
     public string Name { get; private set; }
     public int Health { get; private set; }
     public int Armor { get; private set; }
     public int AttackPower { get; private set; }
+    public IEnumerable<IItem> EquippedItems => _equippedItems;
+    public IEnumerable<IAbility> Abilities => _abilities;
 
     private readonly ILogger _logger;
 
@@ -128,5 +131,22 @@ public class Character
     {
         AttackPower -= attackMod;
         Armor -= armorMod;
+    }
+
+    /// <summary>
+    /// Adds a new ability to the character's ability list.
+    /// </summary>
+    /// <param name="ability">The ability to add.</param>
+    public void AddAbility(IAbility ability)
+    {
+        if (!_abilities.Contains(ability))
+        {
+            _abilities.Add(ability);
+            _logger.Log($"{Name} learned a new ability: {ability.Name}!");
+        }
+        else
+        {
+            _logger.Log($"{Name} already knows {ability.Name}.");
+        }
     }
 }

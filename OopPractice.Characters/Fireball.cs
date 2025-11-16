@@ -12,6 +12,7 @@ namespace OopPractice.Characters
     public class Fireball : IAbility
     {
         /// <inheritdoc/>
+        public Guid Id { get; } = Guid.NewGuid();
         public string Name { get; } = "Fireball";
 
         /// <summary>

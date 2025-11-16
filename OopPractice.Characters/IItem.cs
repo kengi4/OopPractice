@@ -15,6 +15,7 @@ namespace OopPractice.Characters
         /// Gets the name of the item.
         /// </summary>
         string Name { get; }
+        Guid Id { get; }
 
         /// <summary>
         /// Applies the item's effects when equipped.
