@@ -1,33 +1,30 @@
-﻿using OopPractice.Characters;
-using OopPractice.Text;
-using OopPractice1;
+﻿using OopPractice1;
+using OopPractice.Display;
 
-ILogger logger = new ConsoleLogger();
+IDisplayer displayer = new ConsoleDisplayer();
 CliManager cliManager = new CliManager();
 
 string mode = ParseArguments(args);
 
 if (mode == "text")
 {
-    logger.Log("Starting in Text Mode...");
-    var textHandler = new TextCommandHandler(logger);
-    textHandler.RegisterCommands(cliManager);
+    displayer.Display("Text mode update pending...");
 }
 else if (mode == "chars")
 {
-    logger.Log("Starting in Characters Mode...");
-    var charHandler = new CharacterCommandHandler(logger);
+    displayer.Display("Starting in Characters Mode...");
+    var charHandler = new CharacterCommandHandler(displayer);
     charHandler.RegisterCommands(cliManager);
 }
 else
 {
-    logger.Log("No valid mode selected. Exiting.");
+    displayer.Display("No valid mode selected. Exiting.");
     return;
 }
 
 cliManager.Run();
 
-logger.Log("Exiting application.");
+displayer.Display("Exiting application.");
 
 
 static string ParseArguments(string[] args)

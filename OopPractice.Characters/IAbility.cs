@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OopPractice.Display;
 
 namespace OopPractice.Characters
 {
@@ -22,6 +18,6 @@ namespace OopPractice.Characters
         /// </summary>
         /// <param name="caster">The character using the ability.</param>
         /// <param name="target">The target of the ability.</param>
-        void Use(Character caster, Character target, ILogger logger);
+        void Use(Character caster, Character target, IDisplayer displayer);
     }
 }

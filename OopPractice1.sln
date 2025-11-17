@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OopPractice.Characters", "O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OopPractice.Text", "OopPractice.Text\OopPractice.Text.csproj", "{56E219AA-5AB3-3909-E734-5B79BF22ADEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OopPractice.Display", "OopPractice.Display\OopPractice.Display.csproj", "{E56F7741-F641-5D93-ACCC-05EC429E536C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OopPractice.Data", "OopPractice.Data\OopPractice.Data.csproj", "{FD3A29A6-7D6A-4B5A-9B34-1462ACEEC7B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +33,14 @@ Global
 		{56E219AA-5AB3-3909-E734-5B79BF22ADEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56E219AA-5AB3-3909-E734-5B79BF22ADEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56E219AA-5AB3-3909-E734-5B79BF22ADEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E56F7741-F641-5D93-ACCC-05EC429E536C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E56F7741-F641-5D93-ACCC-05EC429E536C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E56F7741-F641-5D93-ACCC-05EC429E536C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E56F7741-F641-5D93-ACCC-05EC429E536C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD3A29A6-7D6A-4B5A-9B34-1462ACEEC7B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD3A29A6-7D6A-4B5A-9B34-1462ACEEC7B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD3A29A6-7D6A-4B5A-9B34-1462ACEEC7B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD3A29A6-7D6A-4B5A-9B34-1462ACEEC7B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

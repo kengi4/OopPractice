@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OopPractice.Display;
 
 namespace OopPractice.Characters
 {
@@ -23,10 +19,10 @@ namespace OopPractice.Characters
         }
 
         /// <inheritdoc/>
-        public void Use(Character caster, Character target, ILogger logger)
+        public void Use(Character caster, Character target, IDisplayer displayer)
         {
             int damage = 30;
-            logger.Log($"{caster.Name} hurls a fireball at {target.Name}!");
+            displayer.Display($"{caster.Name} hurls a fireball at {target.Name}!");
             target.TakeDamage(damage);
         }
     }

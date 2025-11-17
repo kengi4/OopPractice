@@ -1,5 +1,6 @@
 ﻿using OopPractice.Characters;
 using OopPractice.Text;
+using OopPractice.Display;
 
 namespace OopPractice1
 {
@@ -8,12 +9,12 @@ namespace OopPractice1
     /// </summary>
     public class TextCommandHandler
     {
-        private readonly ILogger _logger;
+        private readonly IDisplayer _displayer;
         private readonly TextFactory _factory;
 
-        public TextCommandHandler(ILogger logger)
+        public TextCommandHandler(IDisplayer displayer)
         {
-            _logger = logger;
+            _displayer = displayer;
             _factory = new TextFactory("My Document");
         }
 
@@ -39,7 +40,7 @@ namespace OopPractice1
             }
 
             string pathString = "/" + string.Join("/", path);
-            _logger.Log(pathString);
+            _displayer.Display(pathString);
         }
         private (List<string> positionalArgs, Dictionary<string, string> options) ParseArgs(string[] args)
         {
@@ -76,22 +77,22 @@ namespace OopPractice1
 
             if (options.ContainsKey("--whole"))
             {
-                _logger.Log("--- Printing Whole Document ---");
-                _logger.Log(_factory.RootNode.RenderToString(showIds));
+                _displayer.Display("--- Printing Whole Document ---");
+                _displayer.Display(_factory.RootNode.RenderToString(showIds));
             }
             else
             {
-                _logger.Log("--- Printing Current Node ---");
+                _displayer.Display("--- Printing Current Node ---");
                 string nodeString = _factory.CurrentNode.ToString();
 
                 if (showIds)
                 {
                     string idPrefix = $"[{_factory.CurrentNode.Id.ToString().Substring(0, 8)}] ";
-                    _logger.Log(idPrefix + nodeString);
+                    _displayer.Display(idPrefix + nodeString);
                 }
                 else
                 {
-                    _logger.Log(nodeString);
+                    _displayer.Display(nodeString);
                 }
             }
         }
@@ -106,7 +107,7 @@ namespace OopPractice1
         {
             if (args.Length < 2)
             {
-                _logger.Log("Usage: add <container|leaf> <name_or_content>");
+                _displayer.Display("Usage: add <container|leaf> <name_or_content>");
                 return;
             }
 
@@ -116,19 +117,19 @@ namespace OopPractice1
             if (type == "container")
             {
                 _factory.AddHeading(name);
-                _logger.Log($"Added heading: {name}");
+                _displayer.Display($"Added heading: {name}");
             }
             else if (type == "leaf")
             {
                 _factory.AddParagraph(name);
-                _logger.Log($"Added paragraph: {name}");
+                _displayer.Display($"Added paragraph: {name}");
             }
         }
 
         private void Up(string[] args)
         {
             _factory.Up();
-            _logger.Log($"Moved up.");
+            _displayer.Display($"Moved up.");
         }
 
         private void Remove(string[] args)
@@ -139,7 +140,7 @@ namespace OopPractice1
             {
                 if (currentNode.Parent == null)
                 {
-                    _logger.Log("Error: Cannot remove the root element.");
+                    _displayer.Display("Error: Cannot remove the root element.");
                     return;
                 }
 
@@ -147,11 +148,11 @@ namespace OopPractice1
                 string answer = Prompt($"Are you sure you want to remove '{nodeName}' and move up? (y/n):").ToLower();
                 if (answer != "y")
                 {
-                    _logger.Log("Removal cancelled.");
+                    _displayer.Display("Removal cancelled.");
                     return;
                 }
 
-                _logger.Log($"Removing current node '{nodeName}'...");
+                _displayer.Display($"Removing current node '{nodeName}'...");
                 currentNode.Parent.RemoveChild(currentNode);
                 Up(Array.Empty<string>());
             }
@@ -164,16 +165,16 @@ namespace OopPractice1
                 {
                     if (currentNode.RemoveChild(childToRemove))
                     {
-                        _logger.Log($"Removed element '{nameToRemove}' from '{GetNodeName(currentNode)}'.");
+                        _displayer.Display($"Removed element '{nameToRemove}' from '{GetNodeName(currentNode)}'.");
                     }
                     else
                     {
-                        _logger.Log($"Error: Failed to remove element '{nameToRemove}'.");
+                        _displayer.Display($"Error: Failed to remove element '{nameToRemove}'.");
                     }
                 }
                 else
                 {
-                    _logger.Log($"Error: Element '{nameToRemove}' not found in '{GetNodeName(currentNode)}'.");
+                    _displayer.Display($"Error: Element '{nameToRemove}' not found in '{GetNodeName(currentNode)}'.");
                 }
             }
         }
@@ -188,7 +189,7 @@ namespace OopPractice1
         {
             if (args.Length == 0)
             {
-                _logger.Log("Usage: cd <path> | .. | /");
+                _displayer.Display("Usage: cd <path> | .. | /");
                 return;
             }
             string path = args[0];
@@ -196,14 +197,14 @@ namespace OopPractice1
             if (path == "/")
             {
                 _factory.SetCurrentNode(_factory.RootNode);
-                _logger.Log("Moved to root.");
+                _displayer.Display("Moved to root.");
                 PrintWorkingDirectory(Array.Empty<string>());
                 return;
             }
             if (path == "..")
             {
                 _factory.Up();
-                _logger.Log("Moved up.");
+                _displayer.Display("Moved up.");
                 PrintWorkingDirectory(Array.Empty<string>());
                 return;
             }
@@ -237,12 +238,12 @@ namespace OopPractice1
             if (targetNode != null)
             {
                 _factory.SetCurrentNode(targetNode);
-                _logger.Log("Path changed.");
+                _displayer.Display("Path changed.");
                 PrintWorkingDirectory(Array.Empty<string>());
             }
             else
             {
-                _logger.Log($"Error: Path not found: '{path}'");
+                _displayer.Display($"Error: Path not found: '{path}'");
             }
         }
     }

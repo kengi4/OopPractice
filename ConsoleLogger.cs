@@ -1,16 +1,20 @@
-﻿using OopPractice.Characters;
-using System;
+﻿using OopPractice.Display;
 
 namespace OopPractice1
 {
     /// <summary>
-    /// Implements ILogger by writing messages to the console.
+    /// Implements IDisplayer by writing messages to the console.
     /// </summary>
-    public class ConsoleLogger : ILogger
+    public class ConsoleLogger : IDisplayer
     {
-        public void Log(string message)
+        void IDisplayer.Display(string line)
         {
-            Console.WriteLine(message);
+            throw new NotImplementedException();
+        }
+
+        void IDisplayer.Display(IDisplayable displayable)
+        {
+            throw new NotImplementedException();
         }
     }
 }

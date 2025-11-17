@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OopPractice.Display;
 
 namespace OopPractice.Characters
 {
@@ -13,7 +9,6 @@ namespace OopPractice.Characters
     {
         private readonly int _attackBonus = 10;
 
-
         /// <inheritdoc/>
         public Guid Id { get; } = Guid.NewGuid();
         public string Name { get; } = "Iron Sword";
@@ -21,16 +16,16 @@ namespace OopPractice.Characters
         /// <summary>
         /// Applies the item's effects when equipped.
         /// /// </summary>
-        public void Equip(Character target, ILogger logger)
+        public void Equip(Character target, IDisplayer displayer)
         {
             target.ApplyStatModifier(attackMod: _attackBonus, armorMod: 0);
-            logger.Log($"{target.Name}'s Attack Power increased by {_attackBonus}!");
+            displayer.Display($"{target.Name}'s Attack Power increased by {_attackBonus}!");
         }
 
-        public void Unequip(Character target, ILogger logger)
+        public void Unequip(Character target, IDisplayer displayer)
         {
             target.RemoveStatModifier(attackMod: _attackBonus, armorMod: 0);
-            logger.Log($"{target.Name}'s Attack Power returned to normal.");
+            displayer.Display($"{target.Name}'s Attack Power returned to normal.");
         }
     }
 }

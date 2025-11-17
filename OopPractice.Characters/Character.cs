@@ -1,4 +1,5 @@
 ﻿using OopPractice.Characters;
+using OopPractice.Display;
 
 /// <summary>
 /// Represents a base character in the game.
@@ -13,7 +14,7 @@ public class Character
     public IEnumerable<IItem> EquippedItems => _equippedItems;
     public IEnumerable<IAbility> Abilities => _abilities;
 
-    private readonly ILogger _logger;
+    private readonly IDisplayer _displayer;
 
     protected List<IAbility> _abilities = new List<IAbility>();
     protected List<IItem> _equippedItems = new List<IItem>();
@@ -21,13 +22,13 @@ public class Character
     /// <summary>
     /// Initializes a new instance of the <see cref="Character"/> class.
     /// </summary>
-    public Character(string name, int health, int armor, int attackPower, ILogger logger)
+    public Character(string name, int health, int armor, int attackPower, IDisplayer displayer)
     {
         Name = name;
         Health = health;
         Armor = armor;
         AttackPower = attackPower;
-        _logger = logger;
+        _displayer = displayer;
     }
 
     /// <summary>
@@ -36,7 +37,7 @@ public class Character
     /// <param name="target">The character to attack.</param>
     public virtual void Attack(Character target)
     {
-        _logger.Log($"{Name} attacks {target.Name}!");
+        _displayer.Display($"{Name} attacks {target.Name}!");
 
         target.TakeDamage(this.AttackPower);
     }
@@ -49,10 +50,10 @@ public class Character
     {
         int damageTaken = Math.Max(0, amount - Armor);
         Health -= damageTaken;
-        _logger.Log($"{Name} takes {damageTaken} damage. Current health: {Health}");
+        _displayer.Display($"{Name} takes {damageTaken} damage. Current health: {Health}");
         if (Health <= 0)
         {
-            _logger.Log($"{Name} has been defeated!");
+            _displayer.Display($"{Name} has been defeated!");
         }
     }
 
@@ -64,19 +65,19 @@ public class Character
     {
         if (amount <= 0)
         {
-            _logger.Log("Heal amount must be positive.");
+            _displayer.Display("Heal amount must be positive.");
             return;
         }
         else if (Health + amount > 100)
         {
             int curHealth = Health;
             Health = 100;
-            _logger.Log($"{Name} heals for {Health - curHealth}. Current health: {Health}");
+            _displayer.Display($"{Name} heals for {Health - curHealth}. Current health: {Health}");
         }
         else
         {
             Health += amount;
-            _logger.Log($"{Name} heals for {amount}. Current health: {Health}");
+            _displayer.Display($"{Name} heals for {amount}. Current health: {Health}");
         }
     }
 
@@ -86,9 +87,9 @@ public class Character
     /// <param name="item">The item to equip.</param>
     public void EquipItem(IItem item)
     {
-        _logger.Log($"{Name} equips {item.Name}.");
+        _displayer.Display($"{Name} equips {item.Name}.");
         _equippedItems.Add(item);
-        item.Equip(this, _logger);
+        item.Equip(this, _displayer);
     }
 
     /// <summary>
@@ -102,12 +103,12 @@ public class Character
 
         if (ability != null)
         {
-            _logger.Log($"{Name} uses {ability.Name} on {target.Name}!");
-            ability.Use(this, target, _logger);
+            _displayer.Display($"{Name} uses {ability.Name} on {target.Name}!");
+            ability.Use(this, target, _displayer);
         }
         else
         {
-            _logger.Log($"{Name} doesn't know the ability '{abilityName}'.");
+            _displayer.Display($"{Name} doesn't know the ability '{abilityName}'.");
         }
     }
 
@@ -142,11 +143,18 @@ public class Character
         if (!_abilities.Contains(ability))
         {
             _abilities.Add(ability);
-            _logger.Log($"{Name} learned a new ability: {ability.Name}!");
+            _displayer.Display($"{Name} learned a new ability: {ability.Name}!");
         }
         else
         {
-            _logger.Log($"{Name} already knows {ability.Name}.");
+            _displayer.Display($"{Name} already knows {ability.Name}.");
         }
+    }
+
+    public void RestoreState(int health, int armor, int attackPower)
+    {
+        Health = health;
+        Armor = armor;
+        AttackPower = attackPower;
     }
 }

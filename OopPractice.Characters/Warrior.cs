@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OopPractice.Display;
 
 namespace OopPractice.Characters
 {
@@ -15,8 +11,8 @@ namespace OopPractice.Characters
         /// Initializes a new instance of the <see cref="Warrior"/> class.
         /// </summary>
         /// <param name="name">The warrior's name.</param>
-        public Warrior(string name, ILogger logger)
-            : base(name, 150, 10, 15, logger)
+        public Warrior(string name, IDisplayer displayer)
+            : base(name, 150, 10, 15, displayer)
         {                                    
             _abilities.Add(new PowerStrike());
         }

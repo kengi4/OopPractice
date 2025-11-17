@@ -1,24 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="OopPractice.Characters\**" />
-    <Compile Remove="OopPractice.Text\**" />
-    <EmbeddedResource Remove="OopPractice.Characters\**" />
-    <EmbeddedResource Remove="OopPractice.Text\**" />
-    <None Remove="OopPractice.Characters\**" />
-    <None Remove="OopPractice.Text\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="OopPractice.Characters\**" />
+		<Compile Remove="OopPractice.Text\**" />
+		<Compile Remove="OopPractice.Display\**" />
+		<Compile Remove="OopPractice.Data\**" />
 
-  <ItemGroup>
-    <ProjectReference Include="OopPractice.Characters\OopPractice.Characters.csproj" />
-    <ProjectReference Include="OopPractice.Text\OopPractice.Text.csproj" />
-  </ItemGroup>
+		<EmbeddedResource Remove="OopPractice.Characters\**" />
+		<EmbeddedResource Remove="OopPractice.Text\**" />
+		<EmbeddedResource Remove="OopPractice.Display\**" />
+		<EmbeddedResource Remove="OopPractice.Data\**" />
+
+		<None Remove="OopPractice.Characters\**" />
+		<None Remove="OopPractice.Text\**" />
+		<None Remove="OopPractice.Display\**" />
+		<None Remove="OopPractice.Data\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="OopPractice.Characters\OopPractice.Characters.csproj" />
+		<ProjectReference Include="OopPractice.Data\OopPractice.Data.csproj" />
+		<ProjectReference Include="OopPractice.Display\OopPractice.Display.csproj" />
+		<ProjectReference Include="OopPractice.Text\OopPractice.Text.csproj" />
+	</ItemGroup>
 
 </Project>

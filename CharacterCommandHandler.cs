@@ -1,4 +1,6 @@
 ﻿using OopPractice.Characters;
+using OopPractice.Data;
+using OopPractice.Display;
 
 namespace OopPractice1
 {
@@ -7,15 +9,17 @@ namespace OopPractice1
     /// </summary>
     public class CharacterCommandHandler
     {
-        private readonly ILogger _logger;
+        private readonly IDisplayer _displayer;
+        private readonly Repository _repository;
 
         private readonly List<Character> _characters = new();
         private readonly List<IItem> _items = new();
         private readonly List<IAbility> _abilities = new();
 
-        public CharacterCommandHandler(ILogger logger)
+        public CharacterCommandHandler(IDisplayer displayer)
         {
-            _logger = logger;
+            _displayer = displayer;
+            _repository = new Repository(displayer);
             SeedData();
         }
 
@@ -25,6 +29,8 @@ namespace OopPractice1
             manager.RegisterCommand("add", Add);
             manager.RegisterCommand("act", Act);
             manager.RegisterCommand("ls", ListAll);
+            manager.RegisterCommand("save", Save);
+            manager.RegisterCommand("load", Load);
         }
 
         private IItem? FindItem(string identifier)
@@ -35,7 +41,7 @@ namespace OopPractice1
 
             if (item == null)
             {
-                _logger.Log($"Error: Item '{identifier}' not found.");
+                _displayer.Display($"Error: Item '{identifier}' not found.");
             }
             return item;
         }
@@ -48,7 +54,7 @@ namespace OopPractice1
 
             if (ability == null)
             {
-                _logger.Log($"Error: Ability '{identifier}' not found.");
+                _displayer.Display($"Error: Ability '{identifier}' not found.");
             }
             return ability;
         }
@@ -57,7 +63,7 @@ namespace OopPractice1
         {
             if (args.Length == 0)
             {
-                _logger.Log("Usage: create <char|item|ability>");
+                _displayer.Display("Usage: create <char|item|ability>");
                 return;
             }
 
@@ -76,21 +82,21 @@ namespace OopPractice1
                         CreateAbility();
                         break;
                     default:
-                        _logger.Log($"Unknown type to create: {type}");
+                        _displayer.Display($"Unknown type to create: {type}");
                         break;
                 }
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                _logger.Log($"Failed to create: {ex.Message}");
+                _displayer.Display($"Failed to create: {ex.Message}");
                 Console.ResetColor();
             }
         }
 
         private void CreateCharacter()
         {
-            _logger.Log("--- Creating new Character ---");
+            _displayer.Display("--- Creating new Character ---");
             string name = Prompt("Enter name:");
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -103,22 +109,22 @@ namespace OopPractice1
             switch (type)
             {
                 case "warrior":
-                    newChar = new Warrior(name, _logger);
+                    newChar = new Warrior(name, _displayer);
                     break;
                 case "mage":
-                    newChar = new Mage(name, _logger);
+                    newChar = new Mage(name, _displayer);
                     break;
                 default:
                     throw new Exception($"Unknown character type: {type}");
             }
 
             _characters.Add(newChar);
-            _logger.Log($"Created {type} '{name}' with ID: {newChar.Id.ToString().Substring(0, 8)}");
+            _displayer.Display($"Created {type} '{name}' with ID: {newChar.Id.ToString().Substring(0, 8)}");
         }
 
         private void CreateItem()
         {
-            _logger.Log("--- Creating new Item ---");
+            _displayer.Display("--- Creating new Item ---");
             string type = Prompt("Enter type (Sword):").ToLower();
             IItem newItem;
 
@@ -132,12 +138,12 @@ namespace OopPractice1
             }
 
             _items.Add(newItem);
-            _logger.Log($"Created {type} '{newItem.Name}' with ID: {newItem.Id.ToString().Substring(0, 8)}");
+            _displayer.Display($"Created {type} '{newItem.Name}' with ID: {newItem.Id.ToString().Substring(0, 8)}");
         }
 
         private void CreateAbility()
         {
-            _logger.Log("--- Creating new Ability ---");
+            _displayer.Display("--- Creating new Ability ---");
             string type = Prompt("Enter type (Fireball/PowerStrike):").ToLower();
             IAbility newAbility;
 
@@ -154,7 +160,7 @@ namespace OopPractice1
             }
 
             _abilities.Add(newAbility);
-            _logger.Log($"Created {type} '{newAbility.Name}' with ID: {newAbility.Id.ToString().Substring(0, 8)}");
+            _displayer.Display($"Created {type} '{newAbility.Name}' with ID: {newAbility.Id.ToString().Substring(0, 8)}");
         }
 
         private void Add(string[] args)
@@ -163,7 +169,7 @@ namespace OopPractice1
 
             if (!options.ContainsKey("--char_id") || !options.ContainsKey("--id"))
             {
-                _logger.Log("Usage: add --char_id <char_id_or_name> --id <item_or_ability_id_or_name>");
+                _displayer.Display("Usage: add --char_id <char_id_or_name> --id <item_or_ability_id_or_name>");
                 return;
             }
 
@@ -176,7 +182,7 @@ namespace OopPractice1
 
             if (character == null)
             {
-                _logger.Log($"Error: Character '{charIdentifier}' not found.");
+                _displayer.Display($"Error: Character '{charIdentifier}' not found.");
                 return;
             }
 
@@ -187,7 +193,7 @@ namespace OopPractice1
             if (item != null)
             {
                 character.EquipItem(item);
-                _logger.Log($"Equipped '{item.Name}' on '{character.Name}'.");
+                _displayer.Display($"Equipped '{item.Name}' on '{character.Name}'.");
                 return;
             }
 
@@ -201,7 +207,7 @@ namespace OopPractice1
                 return;
             }
 
-            _logger.Log($"Error: Item or Ability '{entityIdentifier}' not found.");
+            _displayer.Display($"Error: Item or Ability '{entityIdentifier}' not found.");
         }
 
         private void Act(string[] args)
@@ -210,8 +216,8 @@ namespace OopPractice1
 
             if (positional.Count < 1)
             {
-                _logger.Log("Usage: act <action_type> [args...]");
-                _logger.Log("Available actions: attack, heal, ability");
+                _displayer.Display("Usage: act <action_type> [args...]");
+                _displayer.Display("Available actions: attack, heal, ability");
                 return;
             }
 
@@ -224,7 +230,7 @@ namespace OopPractice1
                 case "attack":
                     if (positional.Count < 3)
                     {
-                        _logger.Log("Usage: act attack <actor_name_or_id> <target_name_or_id>");
+                        _displayer.Display("Usage: act attack <actor_name_or_id> <target_name_or_id>");
                         return;
                     }
                     actor = FindCharacter(positional[1]);
@@ -238,12 +244,12 @@ namespace OopPractice1
                 case "ability":
                     if (positional.Count < 3)
                     {
-                        _logger.Log("Usage: act ability <actor_name_or_id> <target_name_or_id> --id <ability_name>");
+                        _displayer.Display("Usage: act ability <actor_name_or_id> <target_name_or_id> --id <ability_name>");
                         return;
                     }
                     if (!options.ContainsKey("--id"))
                     {
-                        _logger.Log("Error: Missing --id <ability_name> for 'ability' action.");
+                        _displayer.Display("Error: Missing --id <ability_name> for 'ability' action.");
                         return;
                     }
 
@@ -259,7 +265,7 @@ namespace OopPractice1
                 case "heal":
                     if (positional.Count < 2)
                     {
-                        _logger.Log("Usage: act heal <actor_name_or_id>");
+                        _displayer.Display("Usage: act heal <actor_name_or_id>");
                         return;
                     }
 
@@ -271,7 +277,7 @@ namespace OopPractice1
                     break;
 
                 default:
-                    _logger.Log($"Error: Unknown action type '{actionType}'.");
+                    _displayer.Display($"Error: Unknown action type '{actionType}'.");
                     break;
             }
         }
@@ -288,7 +294,7 @@ namespace OopPractice1
 
             if (character == null)
             {
-                _logger.Log($"Error: Character '{identifier}' not found.");
+                _displayer.Display($"Error: Character '{identifier}' not found.");
             }
             return character;
         }
@@ -339,7 +345,7 @@ namespace OopPractice1
 
             if (positional.Count == 0)
             {
-                _logger.Log("Usage: ls <char|item|ability> [--id <id/name>]");
+                _displayer.Display("Usage: ls <char|item|ability> [--id <id/name>]");
                 return;
             }
 
@@ -348,7 +354,7 @@ namespace OopPractice1
             if (options.ContainsKey("--id"))
             {
                 string idOrName = options["--id"];
-                _logger.Log($"--- Showing details for {type} '{idOrName}' ---");
+                _displayer.Display($"--- Showing details for {type} '{idOrName}' ---");
 
                 switch (type)
                 {
@@ -356,22 +362,22 @@ namespace OopPractice1
                         Character? c = FindCharacter(idOrName);
                         if (c != null)
                         {
-                            _logger.Log($"Name: {c.Name} [{c.Id.ToString().Substring(0, 8)}]");
-                            _logger.Log($"HP: {c.Health}, AP: {c.AttackPower}, Armor: {c.Armor}");
+                            _displayer.Display($"Name: {c.Name} [{c.Id.ToString().Substring(0, 8)}]");
+                            _displayer.Display($"HP: {c.Health}, AP: {c.AttackPower}, Armor: {c.Armor}");
 
-                            _logger.Log("Equipped Items:");
+                            _displayer.Display("Equipped Items:");
                             foreach (var item in c.EquippedItems)
                             {
-                                _logger.Log($"  - {item.Name} [{item.Id.ToString().Substring(0, 8)}]");
+                                _displayer.Display($"  - {item.Name} [{item.Id.ToString().Substring(0, 8)}]");
                             }
-                            if (!c.EquippedItems.Any()) _logger.Log("  (None)");
+                            if (!c.EquippedItems.Any()) _displayer.Display("  (None)");
 
-                            _logger.Log("Abilities:");
+                            _displayer.Display("Abilities:");
                             foreach (var ability in c.Abilities)
                             {
-                                _logger.Log($"  - {ability.Name} [{ability.Id.ToString().Substring(0, 8)}]");
+                                _displayer.Display($"  - {ability.Name} [{ability.Id.ToString().Substring(0, 8)}]");
                             }
-                            if (!c.Abilities.Any()) _logger.Log("  (None)");
+                            if (!c.Abilities.Any()) _displayer.Display("  (None)");
                         }
                         break;
 
@@ -379,7 +385,7 @@ namespace OopPractice1
                         IItem? i = FindItem(idOrName);
                         if (i != null)
                         {
-                            _logger.Log($"Name: {i.Name} [{i.Id.ToString().Substring(0, 8)}]");
+                            _displayer.Display($"Name: {i.Name} [{i.Id.ToString().Substring(0, 8)}]");
                         }
                         break;
 
@@ -387,43 +393,43 @@ namespace OopPractice1
                         IAbility? a = FindAbility(idOrName);
                         if (a != null)
                         {
-                            _logger.Log($"Name: {a.Name} [{a.Id.ToString().Substring(0, 8)}]");
+                            _displayer.Display($"Name: {a.Name} [{a.Id.ToString().Substring(0, 8)}]");
                         }
                         break;
 
                     default:
-                        _logger.Log($"Unknown type: {type}");
+                        _displayer.Display($"Unknown type: {type}");
                         break;
                 }
             }
             else
             {
-                _logger.Log($"--- Listing all {type} ---");
+                _displayer.Display($"--- Listing all {type} ---");
 
                 if (type == "char")
                 {
                     foreach (var c in _characters)
                     {
-                        _logger.Log($"[{c.Id.ToString().Substring(0, 8)}] {c.Name} (HP: {c.Health}, AP: {c.AttackPower})");
+                        _displayer.Display($"[{c.Id.ToString().Substring(0, 8)}] {c.Name} (HP: {c.Health}, AP: {c.AttackPower})");
                     }
                 }
                 else if (type == "item")
                 {
                     foreach (var i in _items)
                     {
-                        _logger.Log($"[{i.Id.ToString().Substring(0, 8)}] {i.Name}");
+                        _displayer.Display($"[{i.Id.ToString().Substring(0, 8)}] {i.Name}");
                     }
                 }
                 else if (type == "ability")
                 {
                     foreach (var a in _abilities)
                     {
-                        _logger.Log($"[{a.Id.ToString().Substring(0, 8)}] {a.Name}");
+                        _displayer.Display($"[{a.Id.ToString().Substring(0, 8)}] {a.Name}");
                     }
                 }
                 else
                 {
-                    _logger.Log($"Unknown type: {type}");
+                    _displayer.Display($"Unknown type: {type}");
                 }
             }
         }
@@ -436,14 +442,64 @@ namespace OopPractice1
 
         private void SeedData()
         {
-            _characters.Add(new Warrior("Aragorn", _logger));
-            _characters.Add(new Mage("Gandalf", _logger));
+            _characters.Add(new Warrior("Aragorn", _displayer));
+            _characters.Add(new Mage("Gandalf", _displayer));
 
             _items.Add(new Sword());
 
             _abilities.Add(new Fireball());
             _abilities.Add(new PowerStrike());
         }
-    }
+        private void Save(string[] args)
+        {
+            _repository.SaveGame(_characters);
+        }
 
+        private void Load(string[] args)
+        {
+            var loadedData = _repository.LoadGame();
+            if (loadedData.Count == 0) return;
+
+            _characters.Clear();
+
+            foreach (var data in loadedData)
+            {
+                Character character;
+
+                if (data.Type == nameof(Warrior))
+                {
+                    character = new Warrior(data.Name, _displayer);
+                }
+                else if (data.Type == nameof(Mage))
+                {
+                    character = new Mage(data.Name, _displayer);
+                }
+                else
+                {
+                    character = new Character(data.Name, data.Health, data.Armor, data.AttackPower, _displayer);
+                }
+
+                character.RestoreState(data.Health, data.Armor, data.AttackPower);
+
+                foreach (var itemName in data.ItemNames)
+                {
+                    var item = _items.FirstOrDefault(i => i.Name == itemName);
+                    if (item != null) character.EquipItem(item);
+                }
+
+                foreach (var abilityName in data.AbilityNames)
+                {
+                    if (!character.Abilities.Any(a => a.Name == abilityName))
+                    {
+                        var ability = _abilities.FirstOrDefault(a => a.Name == abilityName);
+                        if (ability != null) character.AddAbility(ability);
+                    }
+                }
+
+                _characters.Add(character);
+            }
+
+            _displayer.Display("Characters state restored.");
+        }
+    }
 }
