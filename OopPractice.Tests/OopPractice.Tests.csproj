@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -21,6 +21,7 @@
     <ProjectReference Include="..\OopPractice.Characters\OopPractice.Characters.csproj" />
     <ProjectReference Include="..\OopPractice.Data\OopPractice.Data.csproj" />
     <ProjectReference Include="..\OopPractice.Display\OopPractice.Display.csproj" />
+    <ProjectReference Include="..\OopPractice.Infra\OopPractice.Infra.csproj" />
     <ProjectReference Include="..\OopPractice.Text\OopPractice.Text.csproj" />
   </ItemGroup>
 

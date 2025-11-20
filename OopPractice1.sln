@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OopPractice.Data", "OopPrac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OopPractice.Tests", "OopPractice.Tests\OopPractice.Tests.csproj", "{47BAB170-3CF3-4C16-95A3-AD78E04A3744}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OopPractice.Infra", "OopPractice.Infra\OopPractice.Infra.csproj", "{A43AC3EF-FB9F-43D4-B41D-9524AEB7DFBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{47BAB170-3CF3-4C16-95A3-AD78E04A3744}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47BAB170-3CF3-4C16-95A3-AD78E04A3744}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47BAB170-3CF3-4C16-95A3-AD78E04A3744}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A43AC3EF-FB9F-43D4-B41D-9524AEB7DFBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A43AC3EF-FB9F-43D4-B41D-9524AEB7DFBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A43AC3EF-FB9F-43D4-B41D-9524AEB7DFBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A43AC3EF-FB9F-43D4-B41D-9524AEB7DFBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

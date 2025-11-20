@@ -16,10 +16,13 @@ namespace OopPractice1
         private readonly List<IItem> _items = new();
         private readonly List<IAbility> _abilities = new();
 
+        private readonly OopPractice.Infra.GenshinApiClient _apiClient;
+
         public CharacterCommandHandler(IDisplayer displayer)
         {
             _displayer = displayer;
             _repository = new Repository(displayer);
+            _apiClient = new OopPractice.Infra.GenshinApiClient(displayer);
             SeedData();
         }
 
@@ -31,6 +34,8 @@ namespace OopPractice1
             manager.RegisterCommand("ls", ListAll);
             manager.RegisterCommand("save", Save);
             manager.RegisterCommand("load", Load);
+            manager.RegisterCommand("api-list", ApiList);
+            manager.RegisterCommand("api-create", ApiCreate);
         }
 
         private IItem? FindItem(string identifier)
@@ -58,6 +63,52 @@ namespace OopPractice1
             }
             return ability;
         }
+
+        private async void ApiCreate(string[] args)
+        {
+            if (args.Length == 0)
+            {
+                _displayer.Display("Usage: api-create <character_name>");
+                return;
+            }
+
+            string name = args[0];
+            _displayer.Display($"Fetching '{name}' data from API...");
+
+            try
+            {
+                Character newChar = await _apiClient.GetCharacterAsync(name);
+
+                _characters.Add(newChar);
+                _displayer.Display($"Successfully created character '{newChar.Name}' from API!");
+                _displayer.Display($"Stats -> HP: {newChar.Health}, AP: {newChar.AttackPower}, Armor: {newChar.Armor}");
+            }
+            catch (Exception ex)
+            {
+                _displayer.Display($"Error: Could not create character. {ex.Message}");
+            }
+        }
+
+        private async void ApiList(string[] args)
+        {
+            _displayer.Display("Fetching characters list from API...");
+            try
+            {
+                var list = await _apiClient.GetCharactersListAsync();
+                _displayer.Display($"Found {list.Count} characters:");
+                foreach (var name in list.Take(10))
+                {
+                    _displayer.Display($" - {name}");
+                }
+                _displayer.Display("... (and more)");
+            }
+            catch (Exception ex)
+            {
+                _displayer.Display($"API Error: {ex.Message}");
+            }
+        }
+
+
 
         private void Create(string[] args)
         {

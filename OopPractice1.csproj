@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<Compile Remove="OopPractice.Characters\**" />
+		<Compile Remove="OopPractice.Infra\**" />
 		<Compile Remove="OopPractice.Tests\**" />
 		<Compile Remove="OopPractice.Text\**" />
 		<Compile Remove="OopPractice.Display\**" />
@@ -16,12 +17,16 @@
 
 		<EmbeddedResource Remove="OopPractice.Characters\**" />
 
+		<EmbeddedResource Remove="OopPractice.Infra\**" />
+
 		<EmbeddedResource Remove="OopPractice.Tests\**" />
 		<EmbeddedResource Remove="OopPractice.Text\**" />
 		<EmbeddedResource Remove="OopPractice.Display\**" />
 		<EmbeddedResource Remove="OopPractice.Data\**" />
 
 		<None Remove="OopPractice.Characters\**" />
+
+		<None Remove="OopPractice.Infra\**" />
 
 		<None Remove="OopPractice.Tests\**" />
 		<None Remove="OopPractice.Text\**" />
@@ -33,6 +38,7 @@
 		<ProjectReference Include="OopPractice.Characters\OopPractice.Characters.csproj" />
 		<ProjectReference Include="OopPractice.Data\OopPractice.Data.csproj" />
 		<ProjectReference Include="OopPractice.Display\OopPractice.Display.csproj" />
+		<ProjectReference Include="OopPractice.Infra\OopPractice.Infra.csproj" />
 		<ProjectReference Include="OopPractice.Text\OopPractice.Text.csproj" />
 	</ItemGroup>
 
