@@ -9,16 +9,21 @@
 
 	<ItemGroup>
 		<Compile Remove="OopPractice.Characters\**" />
+		<Compile Remove="OopPractice.Tests\**" />
 		<Compile Remove="OopPractice.Text\**" />
 		<Compile Remove="OopPractice.Display\**" />
 		<Compile Remove="OopPractice.Data\**" />
 
 		<EmbeddedResource Remove="OopPractice.Characters\**" />
+
+		<EmbeddedResource Remove="OopPractice.Tests\**" />
 		<EmbeddedResource Remove="OopPractice.Text\**" />
 		<EmbeddedResource Remove="OopPractice.Display\**" />
 		<EmbeddedResource Remove="OopPractice.Data\**" />
 
 		<None Remove="OopPractice.Characters\**" />
+
+		<None Remove="OopPractice.Tests\**" />
 		<None Remove="OopPractice.Text\**" />
 		<None Remove="OopPractice.Display\**" />
 		<None Remove="OopPractice.Data\**" />
