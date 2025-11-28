@@ -11,19 +11,10 @@ namespace OopPractice.Text
 
         public bool IsRoot() => true;
 
-        public override void Render(StringBuilder builder, int indentation, bool showIds)
+        public override void Accept(IVisitor visitor)
         {
-            string idPrefix = showIds ? $"[{Id.ToString().Substring(0, 8)}] " : "";
-            builder.AppendLine($"{idPrefix}{Name}");
-
-            base.Render(builder, indentation, showIds);
-        }
-
-        public string RenderToString(bool showIds = false)
-        {
-            var builder = new StringBuilder();
-            Render(builder, 0, showIds);
-            return builder.ToString();
+            visitor.Visit(this);
+            base.Accept(visitor);
         }
     }
 }

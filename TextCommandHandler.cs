@@ -72,29 +72,21 @@ namespace OopPractice1
         private void Print(string[] args)
         {
             var (positional, options) = ParseArgs(args);
-
             bool showIds = options.ContainsKey("--id");
+
+            var visitor = new PlainTextVisitor(showIds);
 
             if (options.ContainsKey("--whole"))
             {
-                _displayer.Display("--- Printing Whole Document ---");
-                _displayer.Display(_factory.RootNode.RenderToString(showIds));
+                _displayer.Display("--- Printing Whole Document (via Visitor) ---");
+                _factory.RootNode.Accept(visitor);
             }
             else
             {
-                _displayer.Display("--- Printing Current Node ---");
-                string nodeString = _factory.CurrentNode.ToString();
-
-                if (showIds)
-                {
-                    string idPrefix = $"[{_factory.CurrentNode.Id.ToString().Substring(0, 8)}] ";
-                    _displayer.Display(idPrefix + nodeString);
-                }
-                else
-                {
-                    _displayer.Display(nodeString);
-                }
+                _displayer.Display("--- Printing Current Node (via Visitor) ---");
+                _factory.CurrentNode.Accept(visitor);
             }
+            _displayer.Display(visitor.GetResult());
         }
 
         private string Prompt(string message)

@@ -9,18 +9,15 @@ namespace OopPractice.Text
     public abstract class Leaf : IText
     {
         public Guid Id { get; } = Guid.NewGuid();
+
         protected readonly string? _content;
+        public string? Content => _content;
 
         protected Leaf(string? content)
         {
             _content = content;
         }
 
-        public abstract void Render(StringBuilder builder, int indentation, bool showIds);
-
-        public override string ToString()
-        {
-            return $"[Leaf] {_content}";
-        }
+        public abstract void Accept(IVisitor visitor);
     }
 }

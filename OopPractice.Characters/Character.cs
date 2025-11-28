@@ -1,160 +1,199 @@
-﻿using OopPractice.Characters;
-using OopPractice.Display;
+﻿using OopPractice.Display;
+using System.Linq;
 
-/// <summary>
-/// Represents a base character in the game.
-/// </summary>
-public class Character
+namespace OopPractice.Characters
 {
-    public Guid Id { get; } = Guid.NewGuid();
-    public string Name { get; private set; }
-    public int Health { get; private set; }
-    public int Armor { get; private set; }
-    public int AttackPower { get; private set; }
-    public IEnumerable<IItem> EquippedItems => _equippedItems;
-    public IEnumerable<IAbility> Abilities => _abilities;
-
-    private readonly IDisplayer _displayer;
-
-    protected List<IAbility> _abilities = new List<IAbility>();
-    protected List<IItem> _equippedItems = new List<IItem>();
-
     /// <summary>
-    /// Initializes a new instance of the <see cref="Character"/> class.
+    /// Represents a base character in the game.
+    /// Acts as the 'Context' for Strategy pattern and 'Subject' for Observer pattern.
     /// </summary>
-    public Character(string name, int health, int armor, int attackPower, IDisplayer displayer)
+    public class Character
     {
-        Name = name;
-        Health = health;
-        Armor = armor;
-        AttackPower = attackPower;
-        _displayer = displayer;
-    }
+        public Guid Id { get; } = Guid.NewGuid();
+        public string Name { get; private set; }
+        public int Health { get; private set; }
+        public int Armor { get; private set; }
+        public int AttackPower { get; private set; }
 
-    /// <summary>
-    /// Attacks another character.
-    /// </summary>
-    /// <param name="target">The character to attack.</param>
-    public virtual void Attack(Character target)
-    {
-        _displayer.Display($"{Name} attacks {target.Name}!");
+        private IAttackStrategy _attackStrategy;
 
-        target.TakeDamage(this.AttackPower);
-    }
+        public IEnumerable<IItem> EquippedItems => _equippedItems;
+        public IEnumerable<IAbility> Abilities => _abilities;
 
-    /// <summary>
-    /// Reduces health based on incoming damage, considering armor.
-    /// </summary>
-    /// <param name="amount">The amount of damage to take.</param>
-    public virtual void TakeDamage(int amount)
-    {
-        int damageTaken = Math.Max(0, amount - Armor);
-        Health -= damageTaken;
-        _displayer.Display($"{Name} takes {damageTaken} damage. Current health: {Health}");
-        if (Health <= 0)
+        private readonly IDisplayer _displayer;
+
+        protected List<IAbility> _abilities = new List<IAbility>();
+        protected List<IItem> _equippedItems = new List<IItem>();
+
+        private readonly List<ICharacterObserver> _observers = new List<ICharacterObserver>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Character"/> class.
+        /// </summary>
+        public Character(string name, int health, int armor, int attackPower, IDisplayer displayer)
         {
-            _displayer.Display($"{Name} has been defeated!");
-        }
-    }
+            Name = name;
+            Health = health;
+            Armor = armor;
+            AttackPower = attackPower;
+            _displayer = displayer;
 
-    /// <summary>
-    /// Heals the character for a specific amount.
-    /// /// </summary>
-    /// <param name="amount">The amount to heal.</param>
-    public void Heal(int amount)
-    {
-        if (amount <= 0)
+            _attackStrategy = new DefaultAttackStrategy();
+        }
+
+        public void Subscribe(ICharacterObserver observer)
         {
-            _displayer.Display("Heal amount must be positive.");
-            return;
+            if (!_observers.Contains(observer))
+                _observers.Add(observer);
         }
-        else if (Health + amount > 100)
+
+        public void Unsubscribe(ICharacterObserver observer)
         {
-            int curHealth = Health;
-            Health = 100;
-            _displayer.Display($"{Name} heals for {Health - curHealth}. Current health: {Health}");
+            _observers.Remove(observer);
         }
-        else
+
+        protected void NotifyHealthChanged(int damageTaken)
         {
-            Health += amount;
-            _displayer.Display($"{Name} heals for {amount}. Current health: {Health}");
+            foreach (var observer in _observers)
+            {
+                observer.OnHealthChanged(this, Health, damageTaken);
+            }
         }
-    }
 
-    /// <summary>
-    /// Equips an item and applies its effects.
-    /// </summary>
-    /// <param name="item">The item to equip.</param>
-    public void EquipItem(IItem item)
-    {
-        _displayer.Display($"{Name} equips {item.Name}.");
-        _equippedItems.Add(item);
-        item.Equip(this, _displayer);
-    }
-
-    /// <summary>
-    /// Uses a specific ability.
-    /// </summary>
-    /// <param name="abilityName">The name of the ability to use.</param>
-    /// <param name="target">The target of the ability.</param>
-    public void UseAbility(string abilityName, Character target)
-    {
-        var ability = _abilities.Find(a => a.Name == abilityName);
-
-        if (ability != null)
+        protected void NotifyDied()
         {
-            _displayer.Display($"{Name} uses {ability.Name} on {target.Name}!");
-            ability.Use(this, target, _displayer);
+            foreach (var observer in _observers)
+            {
+                observer.OnCharacterDied(this);
+            }
         }
-        else
+
+        /// <summary>
+        /// Attacks another character using the current Strategy.
+        /// </summary>
+        public virtual void Attack(Character target)
         {
-            _displayer.Display($"{Name} doesn't know the ability '{abilityName}'.");
+            // Pattern: Strategy Execution
+            _attackStrategy.ExecuteAttack(this, target, _displayer);
         }
-    }
 
-    /// <summary>
-    /// Applies a temporary modifier to the character's stats.
-    /// </summary>
-    /// <param name="attackMod">The modifier for Attack Power.</param>
-    /// <param name="armorMod">The modifier for Armor.</param>
-    public void ApplyStatModifier(int attackMod, int armorMod)
-    {
-        AttackPower += attackMod;
-        Armor += armorMod;
-    }
-
-    /// <summary>
-    /// Removes a temporary modifier from the character's stats.
-    /// </summary>
-    /// <param name="attackMod">The modifier for Attack Power.</param>
-    /// <param name="armorMod">The modifier for Armor.</param>
-    public void RemoveStatModifier(int attackMod, int armorMod)
-    {
-        AttackPower -= attackMod;
-        Armor -= armorMod;
-    }
-
-    /// <summary>
-    /// Adds a new ability to the character's ability list.
-    /// </summary>
-    /// <param name="ability">The ability to add.</param>
-    public void AddAbility(IAbility ability)
-    {
-        if (!_abilities.Contains(ability))
+        public void SetAttackStrategy(IAttackStrategy strategy)
         {
-            _abilities.Add(ability);
-            _displayer.Display($"{Name} learned a new ability: {ability.Name}!");
+            _attackStrategy = strategy;
         }
-        else
-        {
-            _displayer.Display($"{Name} already knows {ability.Name}.");
-        }
-    }
 
-    public void RestoreState(int health, int armor, int attackPower)
-    {
-        Health = health;
-        Armor = armor;
-        AttackPower = attackPower;
+        /// <summary>
+        /// Reduces health based on incoming damage, considering armor.
+        /// </summary>
+        public virtual void TakeDamage(int amount)
+        {
+            int damageTaken = Math.Max(0, amount - Armor);
+            Health -= damageTaken;
+
+            _displayer.Display($"{Name} takes {damageTaken} damage. Current health: {Health}");
+
+            NotifyHealthChanged(damageTaken);
+
+            if (Health <= 0)
+            {
+                _displayer.Display($"{Name} has been defeated!");
+                NotifyDied();
+            }
+        }
+
+        public void Heal(int amount)
+        {
+            if (amount <= 0)
+            {
+                _displayer.Display("Heal amount must be positive.");
+                return;
+            }
+            else if (Health + amount > 100)
+            {
+                int curHealth = Health;
+                Health = 100;
+                _displayer.Display($"{Name} heals for {Health - curHealth}. Current health: {Health}");
+            }
+            else
+            {
+                Health += amount;
+                _displayer.Display($"{Name} heals for {amount}. Current health: {Health}");
+            }
+        }
+
+        public void EquipItem(IItem item)
+        {
+            _displayer.Display($"{Name} equips {item.Name}.");
+            _equippedItems.Add(item);
+            item.Equip(this, _displayer);
+        }
+
+        public void UseAbility(string abilityName, Character target)
+        {
+            var ability = _abilities.Find(a => a.Name == abilityName);
+
+            if (ability != null)
+            {
+                _displayer.Display($"{Name} uses {ability.Name} on {target.Name}!");
+                ability.Use(this, target, _displayer);
+            }
+            else
+            {
+                _displayer.Display($"{Name} doesn't know the ability '{abilityName}'.");
+            }
+        }
+
+        public void ApplyStatModifier(int attackMod, int armorMod)
+        {
+            AttackPower += attackMod;
+            Armor += armorMod;
+        }
+
+        public void RemoveStatModifier(int attackMod, int armorMod)
+        {
+            AttackPower -= attackMod;
+            Armor -= armorMod;
+        }
+
+        public void AddAbility(IAbility ability)
+        {
+            if (!_abilities.Contains(ability))
+            {
+                _abilities.Add(ability);
+                _displayer.Display($"{Name} learned a new ability: {ability.Name}!");
+            }
+            else
+            {
+                _displayer.Display($"{Name} already knows {ability.Name}.");
+            }
+        }
+
+        /// <summary>
+        /// Creates a Memento of the current state.
+        /// </summary>
+        public CharacterMemento SaveState()
+        {
+            var abilityNames = _abilities.Select(a => a.Name).ToList();
+            var itemNames = _equippedItems.Select(i => i.Name).ToList();
+
+            return new CharacterMemento(Health, Armor, AttackPower, abilityNames, itemNames);
+        }
+
+        /// <summary>
+        /// Restores state with Memento.
+        /// </summary>
+        public void RestoreState(CharacterMemento memento)
+        {
+            Health = memento.Health;
+            Armor = memento.Armor;
+            AttackPower = memento.AttackPower;
+        }
+
+        public void RestoreState(int health, int armor, int attackPower)
+        {
+            Health = health;
+            Armor = armor;
+            AttackPower = attackPower;
+        }
     }
 }

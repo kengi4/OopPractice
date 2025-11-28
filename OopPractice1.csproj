@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<Compile Remove="OopPractice.Characters\**" />
+		<Compile Remove="OopPractice.FileManager\**" />
 		<Compile Remove="OopPractice.Infra\**" />
 		<Compile Remove="OopPractice.Tests\**" />
 		<Compile Remove="OopPractice.Text\**" />
@@ -16,6 +17,8 @@
 		<Compile Remove="OopPractice.Data\**" />
 
 		<EmbeddedResource Remove="OopPractice.Characters\**" />
+
+		<EmbeddedResource Remove="OopPractice.FileManager\**" />
 
 		<EmbeddedResource Remove="OopPractice.Infra\**" />
 
@@ -25,6 +28,8 @@
 		<EmbeddedResource Remove="OopPractice.Data\**" />
 
 		<None Remove="OopPractice.Characters\**" />
+
+		<None Remove="OopPractice.FileManager\**" />
 
 		<None Remove="OopPractice.Infra\**" />
 

@@ -16,7 +16,7 @@ namespace OopPractice.Tests
 
             character.TakeDamage(damage);
 
-            Assert.Equal(80, character.Health); // 100 - 20 = 80
+            Assert.Equal(80, character.Health);
         }
 
         [Fact]

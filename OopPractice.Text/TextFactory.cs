@@ -64,12 +64,16 @@ namespace OopPractice.Text
         /// </summary>
         public override string ToString()
         {
-            return RootNode.RenderToString(false);
+            var visitor = new PlainTextVisitor(false);
+            RootNode.Accept(visitor);
+            return visitor.GetResult();
         }
 
         public string RenderWithIds()
         {
-            return RootNode.RenderToString(true);
+            var visitor = new PlainTextVisitor(true);
+            RootNode.Accept(visitor);
+            return visitor.GetResult();
         }
 
         /// <summary>

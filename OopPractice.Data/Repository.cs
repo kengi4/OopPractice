@@ -1,5 +1,6 @@
-﻿using System.Text.Json;
+﻿using OopPractice.Characters;
 using OopPractice.Display;
+using System.Text.Json;
 
 namespace OopPractice.Data
 {
@@ -19,15 +20,17 @@ namespace OopPractice.Data
 
             foreach (var charObj in characters)
             {
+                var memento = charObj.SaveState();
+
                 var data = new CharacterData
                 {
                     Name = charObj.Name,
                     Type = charObj.GetType().Name,
-                    Health = charObj.Health,
-                    Armor = charObj.Armor,
-                    AttackPower = charObj.AttackPower,
-                    ItemNames = charObj.EquippedItems.Select(i => i.Name).ToList(),
-                    AbilityNames = charObj.Abilities.Select(a => a.Name).ToList()
+                    Health = memento.Health,
+                    Armor = memento.Armor,
+                    AttackPower = memento.AttackPower,
+                    ItemNames = memento.ItemNames,
+                    AbilityNames = memento.AbilityNames
                 };
                 state.Characters.Add(data);
             }
@@ -39,16 +42,11 @@ namespace OopPractice.Data
 
         public List<CharacterData> LoadGame()
         {
-            if (!File.Exists(_filePath))
-            {
-                _displayer.Display("No save file found.");
-                return new List<CharacterData>();
-            }
-
+            if (!File.Exists(_filePath)) return new List<CharacterData>();
             string jsonString = File.ReadAllText(_filePath);
             var state = JsonSerializer.Deserialize<GameState>(jsonString);
+            _displayer.Display($"Game loaded...");
 
-            _displayer.Display($"Game loaded from {_filePath} (Last modified: {state?.LastModified})");
             return state?.Characters ?? new List<CharacterData>();
         }
     }

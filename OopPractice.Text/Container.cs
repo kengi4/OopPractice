@@ -40,11 +40,11 @@ namespace OopPractice.Text
             return _children.Remove(child);
         }
 
-        public virtual void Render(StringBuilder builder, int indentation, bool showIds)
+        public virtual void Accept(IVisitor visitor)
         {
             foreach (var child in _children)
             {
-                child.Render(builder, indentation + 1, showIds);
+                child.Accept(visitor);
             }
         }
         public override string ToString()
@@ -67,9 +67,7 @@ namespace OopPractice.Text
                 }
                 if (child is Leaf l)
                 {
-                    var sb = new System.Text.StringBuilder();
-                    l.Render(sb, 0, false);
-                    return sb.ToString().Trim().Equals(nameOrContent, StringComparison.OrdinalIgnoreCase);
+                    return (l.Content ?? string.Empty).Trim().Equals(nameOrContent, StringComparison.OrdinalIgnoreCase);
                 }
                 return false;
             });

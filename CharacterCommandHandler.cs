@@ -1,6 +1,8 @@
 ﻿using OopPractice.Characters;
 using OopPractice.Data;
 using OopPractice.Display;
+using System.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace OopPractice1
 {
@@ -15,6 +17,7 @@ namespace OopPractice1
         private readonly List<Character> _characters = new();
         private readonly List<IItem> _items = new();
         private readonly List<IAbility> _abilities = new();
+        private readonly BattleLogger _battleLogger;
 
         private readonly OopPractice.Infra.GenshinApiClient _apiClient;
 
@@ -23,6 +26,7 @@ namespace OopPractice1
             _displayer = displayer;
             _repository = new Repository(displayer);
             _apiClient = new OopPractice.Infra.GenshinApiClient(displayer);
+            _battleLogger = new BattleLogger(displayer);
             SeedData();
         }
 
@@ -161,9 +165,11 @@ namespace OopPractice1
             {
                 case "warrior":
                     newChar = new Warrior(name, _displayer);
+                    newChar.Subscribe(_battleLogger);
                     break;
                 case "mage":
                     newChar = new Mage(name, _displayer);
+                    newChar.Subscribe(_battleLogger);
                     break;
                 default:
                     throw new Exception($"Unknown character type: {type}");
@@ -493,8 +499,14 @@ namespace OopPractice1
 
         private void SeedData()
         {
-            _characters.Add(new Warrior("Aragorn", _displayer));
-            _characters.Add(new Mage("Gandalf", _displayer));
+            var warrior = new Warrior("Aragorn", _displayer);
+            var mage = new Mage("Gandalf", _displayer);
+
+            warrior.Subscribe(_battleLogger);
+            mage.Subscribe(_battleLogger);
+
+            _characters.Add(warrior);
+            _characters.Add(mage);
 
             _items.Add(new Sword());
 
@@ -520,17 +532,27 @@ namespace OopPractice1
                 if (data.Type == nameof(Warrior))
                 {
                     character = new Warrior(data.Name, _displayer);
+                    character.Subscribe(_battleLogger);
                 }
                 else if (data.Type == nameof(Mage))
                 {
                     character = new Mage(data.Name, _displayer);
+                    character.Subscribe(_battleLogger);
                 }
                 else
                 {
                     character = new Character(data.Name, data.Health, data.Armor, data.AttackPower, _displayer);
+                    character.Subscribe(_battleLogger);
                 }
 
-                character.RestoreState(data.Health, data.Armor, data.AttackPower);
+                var memento = new CharacterMemento(
+                    data.Health,
+                    data.Armor,
+                    data.AttackPower,
+                    data.AbilityNames,
+                    data.ItemNames
+                );
+                character.RestoreState(memento);
 
                 foreach (var itemName in data.ItemNames)
                 {
