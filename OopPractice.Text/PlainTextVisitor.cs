@@ -21,6 +21,7 @@ namespace OopPractice.Text
         public void Visit(Root root)
         {
             AppendText(root.Name, root.Id);
+            _indentation++;
         }
 
         public void Visit(Header header)

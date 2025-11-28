@@ -43,6 +43,7 @@
 		<ProjectReference Include="OopPractice.Characters\OopPractice.Characters.csproj" />
 		<ProjectReference Include="OopPractice.Data\OopPractice.Data.csproj" />
 		<ProjectReference Include="OopPractice.Display\OopPractice.Display.csproj" />
+		<ProjectReference Include="OopPractice.FileManager\OopPractice.FileManager.csproj" />
 		<ProjectReference Include="OopPractice.Infra\OopPractice.Infra.csproj" />
 		<ProjectReference Include="OopPractice.Text\OopPractice.Text.csproj" />
 	</ItemGroup>
