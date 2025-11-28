@@ -2,32 +2,29 @@
 
 namespace OopPractice1
 {
-    /// <summary>
-    /// Manages the registration and execution of CLI commands.
-    /// Follows Open-Closed Principle by allowing new commands to be added
-    /// without modifying this class.
-    /// </summary>
     public class CliManager
     {
         private readonly Dictionary<string, Action<string[]>> _commands = new();
 
-        /// <summary>
-        /// Registers a new command.
-        /// </summary>
-        /// <param name="commandName">The keyword to invoke the command.</param>
-        /// <param name="action">The function to execute.</param>
+        // 1. Додаємо конструктор, де реєструємо команду "help"
+        public CliManager()
+        {
+            RegisterCommand("help", PrintHelp);
+        }
+
         public void RegisterCommand(string commandName, Action<string[]> action)
         {
             _commands[commandName.ToLower()] = action;
         }
 
-        /// <summary>
-        /// Starts the main Read-Evaluate-Print Loop (REPL).
-        /// Continuously listens for user input.
-        /// </summary>
+        public void UseStrategy(OopPractice1.Strategies.ICommandStrategy strategy)
+        {
+            strategy.RegisterCommands(this);
+        }
+
         public void Run()
         {
-            Console.WriteLine("CLI manager started. Type 'exit' to quit.");
+            Console.WriteLine("CLI System Ready. Waiting for input...");
             while (true)
             {
                 Console.Write("> ");
@@ -40,10 +37,6 @@ namespace OopPractice1
             }
         }
 
-        /// <summary>
-        /// Parses the raw input string and executes the corresponding command.
-        /// </summary>
-        /// <param name="input">The raw string from the user.</param>
         private void ProcessInput(string input)
         {
             var parts = Regex.Matches(input, @"[\""].+?[\""]|[^ ]+")
@@ -72,9 +65,19 @@ namespace OopPractice1
             else
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"Unknown command: '{commandName}'");
+                Console.WriteLine($"Unknown command: '{commandName}'. Type 'help' to list commands.");
                 Console.ResetColor();
             }
+        }
+
+        private void PrintHelp(string[] args)
+        {
+            Console.WriteLine("\n--- Available Commands ---");
+            foreach (var command in _commands.Keys.OrderBy(k => k))
+            {
+                Console.WriteLine($" - {command}");
+            }
+            Console.WriteLine("--------------------------\n");
         }
     }
 }

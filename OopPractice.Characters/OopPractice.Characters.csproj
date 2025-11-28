@@ -9,5 +9,4 @@
   <ItemGroup>
     <ProjectReference Include="..\OopPractice.Display\OopPractice.Display.csproj" />
   </ItemGroup>
-
 </Project>
