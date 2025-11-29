@@ -31,7 +31,7 @@ namespace OopPractice.Characters
             _displayer.Display("--- Battle Ended ---");
         }
 
-        private void ExecuteRound()
+        public void ExecuteRound()
         {
             var allCharacters = _teamA.Concat(_teamB).Where(c => c.Health > 0).ToList();
 
