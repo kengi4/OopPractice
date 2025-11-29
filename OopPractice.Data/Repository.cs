@@ -6,12 +6,23 @@ namespace OopPractice.Data
 {
     public class Repository
     {
-        private readonly string _filePath = "gamestate.json";
+        private readonly string _filePath;
         private readonly IDisplayer _displayer;
 
         public Repository(IDisplayer displayer)
         {
             _displayer = displayer;
+
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+            string gameFolder = Path.Combine(appDataPath, "OopPracticeRPG");
+
+            if (!Directory.Exists(gameFolder))
+            {
+                Directory.CreateDirectory(gameFolder);
+            }
+
+            _filePath = Path.Combine(gameFolder, "gamestate.json");
         }
 
         public void SaveGame(List<Character> characters)
@@ -37,17 +48,29 @@ namespace OopPractice.Data
 
             string jsonString = JsonSerializer.Serialize(state, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_filePath, jsonString);
-            _displayer.Display($"Game saved to {_filePath}");
+            _displayer.Display($"[System] Game saved to: {_filePath}");
         }
 
         public List<CharacterData> LoadGame()
         {
-            if (!File.Exists(_filePath)) return new List<CharacterData>();
-            string jsonString = File.ReadAllText(_filePath);
-            var state = JsonSerializer.Deserialize<GameState>(jsonString);
-            _displayer.Display($"Game loaded...");
+            if (!File.Exists(_filePath))
+            {
+                _displayer.Display("[System] No save file found.");
+                return new List<CharacterData>();
+            }
 
-            return state?.Characters ?? new List<CharacterData>();
+            try
+            {
+                string jsonString = File.ReadAllText(_filePath);
+                var state = JsonSerializer.Deserialize<GameState>(jsonString);
+                _displayer.Display($"[System] Game loaded successfully from: {_filePath}");
+                return state?.Characters ?? new List<CharacterData>();
+            }
+            catch (Exception ex)
+            {
+                _displayer.Display($"[System] Error loading save file: {ex.Message}");
+                return new List<CharacterData>();
+            }
         }
     }
 }
