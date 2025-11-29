@@ -12,6 +12,8 @@ var charRenderer = new CharacterConsoleRenderer(driver);
 CliManager cli = new CliManager();
 
 cli.UseStrategy(new CharacterManagementStrategy(charRenderer, displayer));
+cli.UseStrategy(new OopPractice1.Strategies.GameStrategy(displayer));
+
 Console.WriteLine("=== OOP Practice CLI v2.0 ===");
 Console.WriteLine("Loaded modules: Characters.");
 cli.Run();
